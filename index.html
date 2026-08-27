@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#b7192e">
+<title>BNI 富商分會</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{--red:#b7192e;--ink:#242424;--muted:#777;--bg:#f7f5f2;--card:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;background:var(--bg);color:var(--ink)}
+.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:88px}
+header{background:#fff;padding:18px 20px 14px;display:flex;align-items:center;gap:14px;border-bottom:1px solid #eee}
+header img{width:54px;height:54px;object-fit:contain;border-radius:12px}
+header h1{font-size:20px;margin:0}header p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.hero{margin:18px;background:linear-gradient(135deg,#9d1026,#d52b38);color:white;border-radius:22px;padding:24px;box-shadow:0 10px 30px #9d102622}
+.hero small{opacity:.85}.hero h2{font-size:29px;margin:8px 0}.hero p{margin:0;opacity:.92}
+.section{padding:0 18px 18px}.title{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.title h3{margin:0;font-size:18px}.title span{font-size:13px;color:var(--red)}
+.notice{background:#fff;border-radius:18px;padding:16px;box-shadow:0 3px 15px #00000008}.notice div{padding:11px 0;border-bottom:1px solid #eee}.notice div:last-child{border:0}.dot{color:var(--red);margin-right:7px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:var(--card);border-radius:18px;padding:20px 15px;text-align:left;min-height:118px;border:0;box-shadow:0 3px 15px #00000009;color:var(--ink);font:inherit}
+.card b{display:block;font-size:17px;margin:10px 0 5px}.card small{color:var(--muted)}.icon{font-size:27px}
+.panel{display:none}.panel.active{display:block}.home.active{display:block}.home{display:none}
+.back{border:0;background:none;color:var(--red);font-size:15px;padding:18px}
+.content{margin:0 18px;background:white;border-radius:18px;padding:18px}.content h2{margin-top:0}.item{padding:14px 0;border-bottom:1px solid #eee}.item:last-child{border:0}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);background:#fff;border-top:1px solid #eee;display:flex;justify-content:space-around;padding:10px 4px calc(10px + env(safe-area-inset-bottom));z-index:10}
+nav button{border:0;background:none;font:inherit;font-size:12px;color:#666;padding:5px 8px}nav button strong{display:block;font-size:20px;margin-bottom:2px}
+</style>
+</head>
+<body>
+<div class="app">
+<header><img src="logo.jpg" alt="富商白金名人堂 Logo"><div><h1>BNI 富商分會</h1><p>富商白金名人堂</p></div></header>
+
+<main id="home" class="home active">
+<section class="hero"><small>每週例會</small><h2>週三 06:30–08:30</h2><p>與夥伴建立關係，創造更多商務機會</p></section>
+<section class="section">
+<div class="title"><h3>本週重要公告</h3><span onclick="show('ann')">查看全部 →</span></div>
+<div class="notice"><div><span class="dot">●</span>歡迎來到富商分會行動入口</div><div><span class="dot">●</span>本週例會：週三 06:30 準時開始</div><div><span class="dot">●</span>活動與來賓資訊可由管理者持續更新</div></div>
+</section>
+<section class="section"><div class="grid">
+<button class="card" onclick="show('members')"><span class="icon">👥</span><b>會員名錄</b><small>快速查找夥伴</small></button>
+<button class="card" onclick="show('calendar')"><span class="icon">📅</span><b>行事曆</b><small>例會與活動</small></button>
+<button class="card" onclick="show('star')"><span class="icon">⭐</span><b>本週之星</b><small>榮耀時刻</small></button>
+<button class="card" onclick="show('referral')"><span class="icon">🤝</span><b>引薦專區</b><small>我有／我要</small></button>
+<button class="card" onclick="show('events')"><span class="icon">🎯</span><b>活動資訊</b><small>報名與交流</small></button>
+<button class="card" onclick="show('docs')"><span class="icon">📂</span><b>分會資料庫</b><small>文件與資源</small></button>
+</div></section>
+</main>
+
+<div id="ann" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>📢 本週公告</h2><div class="item">本週例會｜週三 06:30–08:30</div><div class="item">來賓邀約與活動資訊可放在這裡。</div></div></div>
+<div id="members" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>👥 會員名錄</h2><div class="item">之後可放：姓名｜公司｜專業別｜聯絡方式</div><div class="item">可再加入搜尋與產業分類。</div></div></div>
+<div id="calendar" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>📅 分會行事曆</h2><div class="item">每週三｜06:30–08:30 分會例會</div><div class="item">之後可直接嵌入 Google Calendar。</div></div></div>
+<div id="star" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>⭐ 本週之星</h2><div class="item">放置得獎會員照片、姓名與介紹。</div></div></div>
+<div id="referral" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>🤝 引薦專區</h2><div class="item">會員 A｜我要：品牌電商客戶</div><div class="item">會員 B｜我有：企業主交流資源</div></div></div>
+<div id="events" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>🎯 活動資訊</h2><div class="item">可串 Google Forms 做活動報名。</div></div></div>
+<div id="docs" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>📂 分會資料庫</h2><div class="item">例會資料</div><div class="item">教育訓練</div><div class="item">常用表單與 Google Drive</div></div></div>
+
+<nav>
+<button onclick="show('home')"><strong>⌂</strong>首頁</button>
+<button onclick="show('ann')"><strong>◉</strong>公告</button>
+<button onclick="show('calendar')"><strong>▣</strong>行事曆</button>
+<button onclick="show('members')"><strong>♙</strong>會員</button>
+</nav>
+</div>
+<script>
+function show(id){
+ document.querySelectorAll('.home,.panel').forEach(x=>x.classList.remove('active'));
+ document.getElementById(id).classList.add('active'); window.scrollTo(0,0);
+}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+</script>
+</body></html>

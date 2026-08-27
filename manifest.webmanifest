@@ -1,0 +1,8 @@
+{
+  "name":"BNI 富商分會",
+  "short_name":"富商分會",
+  "start_url":"./index.html",
+  "display":"standalone",
+  "background_color":"#f7f5f2",
+  "theme_color":"#b7192e"
+}
