@@ -1,3 +1,3 @@
-const CACHE='fushang-v2'; const ASSETS=['./','./index.html','./logo.jpg'];
+const CACHE='fushang-v3'; const ASSETS=['./','./index.html','./logo.jpg'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
 self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));

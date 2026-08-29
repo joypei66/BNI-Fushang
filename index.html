@@ -33,6 +33,14 @@ nav button{border:0;background:none;font:inherit;font-size:12px;color:#666;paddi
 .member-industry{display:inline-block;font-size:12px;color:#9d1026;background:#fbecef;padding:5px 9px;border-radius:999px}
 .empty-state{padding:24px 0;text-align:center;color:#888}
 
+
+.calendar-note{font-size:14px;color:#777;margin:-6px 0 14px}
+.calendar-wrap{background:#fff;border-radius:18px;overflow:hidden;border:1px solid #eee}
+.calendar-wrap iframe{display:block;min-height:650px}
+@media(max-width:600px){
+  .calendar-wrap iframe{height:620px;min-height:620px}
+}
+
 </style>
 </head>
 <body>
@@ -66,7 +74,23 @@ nav button{border:0;background:none;font:inherit;font-size:12px;color:#666;paddi
   <div id="memberList"></div>
 </div>
 </div>
-<div id="calendar" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>📅 分會行事曆</h2><div class="item">每週三｜06:30–08:30 分會例會</div><div class="item">之後可直接嵌入 Google Calendar。</div></div></div>
+<div id="calendar" class="panel">
+<button class="back" onclick="show('home')">← 回首頁</button>
+<div class="content">
+  <h2>📅 富商行事曆</h2>
+  <div class="calendar-note">例會、培訓與分會活動會自動同步 Google Calendar</div>
+  <div class="calendar-wrap">
+    <iframe
+      src="https://calendar.google.com/calendar/embed?src=fushang8676%40gmail.com&ctz=Asia%2FTaipei&mode=AGENDA"
+      style="border:0"
+      width="100%"
+      height="650"
+      frameborder="0"
+      scrolling="no">
+    </iframe>
+  </div>
+</div>
+</div></div>
 <div id="star" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>⭐ 本週之星</h2><div class="item">放置得獎會員照片、姓名與介紹。</div></div></div>
 <div id="referral" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>🤝 引薦專區</h2><div class="item">會員 A｜我要：品牌電商客戶</div><div class="item">會員 B｜我有：企業主交流資源</div></div></div>
 <div id="events" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>🎯 活動資訊</h2><div class="item">可串 Google Forms 做活動報名。</div></div></div>
