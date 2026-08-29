@@ -1,0 +1,22 @@
+BNI 富商分會手機網站 V4
+
+V4 新增：
+1. Google Calendar 活動卡片版
+2. 首頁自動顯示下一場活動
+3. 保留 Google Sheet 會員名錄自動同步
+4. 手機版行事曆不再顯示大片 Google Calendar iframe
+
+第一次使用 V4 需要做一次 Google Apps Script 設定：
+1. 開啟 https://script.google.com/
+2. 新增專案
+3. 將「GoogleAppsScript_行事曆API_Code.gs」內容貼到 Code.gs
+4. 部署 → 新增部署作業 → 網頁應用程式
+5. 執行身分：我
+6. 誰可以存取：所有人
+7. 部署後複製以 /exec 結尾的網址
+8. 打開 index.html，將：
+   PASTE_YOUR_GOOGLE_APPS_SCRIPT_EXEC_URL_HERE
+   換成你的 /exec 網址
+9. 上傳 index.html、sw.js 到 GitHub
+
+完成後，未來只需要修改「富商」Google Calendar，網站活動卡片就會自動更新。
