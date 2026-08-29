@@ -25,6 +25,14 @@ header h1{font-size:20px;margin:0}header p{margin:4px 0 0;color:var(--muted);fon
 .content{margin:0 18px;background:white;border-radius:18px;padding:18px}.content h2{margin-top:0}.item{padding:14px 0;border-bottom:1px solid #eee}.item:last-child{border:0}
 nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);background:#fff;border-top:1px solid #eee;display:flex;justify-content:space-around;padding:10px 4px calc(10px + env(safe-area-inset-bottom));z-index:10}
 nav button{border:0;background:none;font:inherit;font-size:12px;color:#666;padding:5px 8px}nav button strong{display:block;font-size:20px;margin-bottom:2px}
+
+.member-card{padding:15px 0;border-bottom:1px solid #eee}
+.member-card:last-child{border:0}
+.member-name{font-size:17px;font-weight:700;margin-bottom:5px}
+.member-company{font-size:14px;color:#444;margin-bottom:4px}
+.member-industry{display:inline-block;font-size:12px;color:#9d1026;background:#fbecef;padding:5px 9px;border-radius:999px}
+.empty-state{padding:24px 0;text-align:center;color:#888}
+
 </style>
 </head>
 <body>
@@ -48,7 +56,16 @@ nav button{border:0;background:none;font:inherit;font-size:12px;color:#666;paddi
 </main>
 
 <div id="ann" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>📢 本週公告</h2><div class="item">本週例會｜週三 06:30–08:30</div><div class="item">來賓邀約與活動資訊可放在這裡。</div></div></div>
-<div id="members" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>👥 會員名錄</h2><div class="item">之後可放：姓名｜公司｜專業別｜聯絡方式</div><div class="item">可再加入搜尋與產業分類。</div></div></div>
+<div id="members" class="panel">
+<button class="back" onclick="show('home')">← 回首頁</button>
+<div class="content">
+  <h2>👥 會員名錄 <span id="memberCount" style="font-size:13px;color:#777;font-weight:400"></span></h2>
+  <input id="memberSearch" oninput="filterMembers()" placeholder="搜尋姓名、公司、專業別"
+    style="width:100%;padding:13px 14px;border:1px solid #ddd;border-radius:14px;font-size:16px;outline:none;margin-bottom:12px">
+  <div id="memberStatus" style="color:#777;font-size:14px;padding:8px 0">會員資料載入中…</div>
+  <div id="memberList"></div>
+</div>
+</div>
 <div id="calendar" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>📅 分會行事曆</h2><div class="item">每週三｜06:30–08:30 分會例會</div><div class="item">之後可直接嵌入 Google Calendar。</div></div></div>
 <div id="star" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>⭐ 本週之星</h2><div class="item">放置得獎會員照片、姓名與介紹。</div></div></div>
 <div id="referral" class="panel"><button class="back" onclick="show('home')">← 回首頁</button><div class="content"><h2>🤝 引薦專區</h2><div class="item">會員 A｜我要：品牌電商客戶</div><div class="item">會員 B｜我有：企業主交流資源</div></div></div>
@@ -63,10 +80,79 @@ nav button{border:0;background:none;font:inherit;font-size:12px;color:#666;paddi
 </nav>
 </div>
 <script>
+const MEMBER_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_OZdvfFJ5Ja8eKUtaAfhApy7E50RMBradfgXFUFAhy7NlWtNxpivC0OPtyirON0FuVHMYkKGyN0-l/pub?gid=999759021&single=true&output=csv';
+let membersData = [];
+
 function show(id){
- document.querySelectorAll('.home,.panel').forEach(x=>x.classList.remove('active'));
- document.getElementById(id).classList.add('active'); window.scrollTo(0,0);
+  document.querySelectorAll('.home,.panel').forEach(x=>x.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='members' && membersData.length===0) loadMembers();
 }
+
+function parseCSV(csv){
+  const rows=[]; let row=[]; let cell=''; let q=false;
+  for(let i=0;i<csv.length;i++){
+    const c=csv[i], n=csv[i+1];
+    if(c==='"' && q && n==='"'){ cell+='"'; i++; }
+    else if(c==='"') q=!q;
+    else if(c===',' && !q){ row.push(cell); cell=''; }
+    else if((c==='\n' || c==='\r') && !q){
+      if(c==='\r' && n==='\n') i++;
+      row.push(cell); cell='';
+      if(row.some(v=>v!=='')) rows.push(row);
+      row=[];
+    } else cell+=c;
+  }
+  if(cell.length || row.length){ row.push(cell); rows.push(row); }
+  return rows;
+}
+
+function esc(s){
+  return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+async function loadMembers(){
+  const status=document.getElementById('memberStatus');
+  try{
+    const res=await fetch(MEMBER_CSV_URL + '&t=' + Date.now(), {cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const csv=await res.text();
+    const rows=parseCSV(csv);
+    const headers=rows.shift().map(h=>h.trim());
+    membersData=rows.map(r=>Object.fromEntries(headers.map((h,i)=>[h,(r[i]||'').trim()])))
+      .filter(m=>m['姓名']);
+    document.getElementById('memberCount').textContent='共 '+membersData.length+' 位';
+    status.style.display='none';
+    renderMembers(membersData);
+  }catch(e){
+    status.textContent='目前無法載入會員資料，請稍後再試。';
+    console.error(e);
+  }
+}
+
+function renderMembers(list){
+  const box=document.getElementById('memberList');
+  if(!list.length){
+    box.innerHTML='<div class="empty-state">找不到符合條件的會員</div>';
+    return;
+  }
+  box.innerHTML=list.map(m=>`
+    <div class="member-card">
+      <div class="member-name">${esc(m['姓名'])}</div>
+      <div class="member-company">${esc(m['公司名稱']||'')}</div>
+      <span class="member-industry">${esc(m['BNI專業別']||'未填專業別')}</span>
+    </div>`).join('');
+}
+
+function filterMembers(){
+  const q=document.getElementById('memberSearch').value.trim().toLowerCase();
+  if(!q) return renderMembers(membersData);
+  renderMembers(membersData.filter(m =>
+    [m['姓名'],m['公司名稱'],m['BNI專業別']].some(v=>String(v||'').toLowerCase().includes(q))
+  ));
+}
+
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
 </script>
 </body></html>
