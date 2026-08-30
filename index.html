@@ -346,7 +346,6 @@ function loadCalendarEvents(){
   window[callbackName]=function(events){
     calendarLoading=false;
     renderCalendarEvents(events);
-    delete window[callbackName];
     const old=document.getElementById('calendarJsonp');
     if(old) old.remove();
   };
@@ -364,6 +363,14 @@ function loadCalendarEvents(){
     status.textContent='目前無法載入近期活動，請按「查看完整行事曆」。';
   };
   document.body.appendChild(script);
+  setTimeout(function(){
+    if(calendarLoading){
+      calendarLoading=false;
+      status.style.display='block';
+      status.className='calendar-empty';
+      status.textContent='活動載入逾時，請按「重新整理」再試一次。';
+    }
+  },10000);
 }
 
 loadCalendarEvents();
