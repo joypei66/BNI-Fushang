@@ -374,6 +374,11 @@ function loadCalendarEvents(){
 }
 
 loadCalendarEvents();
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+// 穩定版：不再註冊舊的 cache-first Service Worker。
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations()
+    .then(registrations => registrations.forEach(reg => reg.unregister()))
+    .catch(()=>{});
+}
 </script>
 </body></html>
